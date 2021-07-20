@@ -1,7 +1,7 @@
 //
 // Created by zhanzhao on 2021/4/30.
 //
-#include "./listtype.h"
+#include "../Status.h"
 
 //理解结构体和结构体标签：https://blog.csdn.net/way88liu/article/details/42043335
 
@@ -58,12 +58,4 @@ Status ListInsert(LinkList L,int i,ElemType e)
     {
         p = p->next;
     }
-}
-
-
-
-
-int main(void)
-{
-    return 0;
 }
