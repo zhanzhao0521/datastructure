@@ -85,12 +85,77 @@ int main(int argc, char** argv) {
 
     printf("███████ LocateElem \n");
     {
-        int k = getchar();
+        int k = 6;
         i = LocateElem(L,k);
         if(i>0)
             printf("元素 %d 在 L 序号为：%d 的位置 \n",k,i);
         else
             printf("在L上没有找到 \"%d\" 元素\n",k);
+    }
+    PressEnterToContinue();
+
+
+    printf("███████ PriorElem \n");
+    {
+        ElemType cur_e = 6;
+        if(PriorElem(L, cur_e, &e)) {
+            printf("█ 元素 \"%d\" 的前驱为 \"%d\" \n", cur_e, e);
+        } else {
+            printf("█ 元素 \"%d\" 的前驱不存在！\n", cur_e);
+        }
+    }
+    PressEnterToContinue();
+
+    printf("████████ NextElem \n");
+    {
+        ElemType cur_e = 6;
+
+        if(NextElem(L, cur_e, &e) == OK) {
+            printf("█ 元素 \"%d\" 的后继为 \"%d\" \n", cur_e, e);
+        } else {
+            printf("█ 元素 \"%d\" 的后继不存在！\n", cur_e);
+        }
+    }
+    PressEnterToContinue();
+
+    printf("████████ ClearList \n");
+    {
+        printf("█ 清空 L 前：");
+        if(ListEmpty(L) == TRUE) {
+            printf(" L 为空！！\n");
+        } else {
+            printf(" L 不为空！\n");
+        }
+
+        ClearList(&L);
+
+        printf("█ 清空 L 后：");
+        if(ListEmpty(L) == TRUE) {
+            printf(" L 为空！！\n");
+        } else {
+            printf(" L 不为空！\n");
+        }
+    }
+    PressEnterToContinue();
+
+
+    printf("████████ DestroyList \n");
+    {
+        printf("█ 销毁 L 前：");
+        if(L.data != NULL) {
+            printf(" L 存在！\n");
+        } else {
+            printf(" L 不存在！！\n");
+        }
+
+        DestroyList(&L);
+
+        printf("█ 销毁 L 后：");
+        if(L.data != NULL) {
+            printf(" L 存在！\n");
+        } else {
+            printf(" L 不存在！！\n");
+        }
     }
     PressEnterToContinue();
     return 0;

@@ -51,13 +51,12 @@ int ListLength(SqList L)
     return L.length;
 }
 
+//判空
 int ListEmpty(SqList L)
 {
     return L.length == 0 ? TRUE : FALSE;
 }
 
-
-//获得第i个位置的元素
 /*
  * 取值
  *
@@ -117,22 +116,6 @@ Status ListInsert(SqList* L,int i,ElemType e){
  * 4.表长减1
  */
 //删除操作
-//Status ListDelete(SqList *L,int i,ElemType *e)
-//{
-//    int k;
-//    if(L->length == 0)
-//        return ERROR;
-//    if(i<1 || i>L->length)
-//        return ERROR;
-//    *e = L->data[i-1];
-//    if(i<L->length){
-//        for(k=i;k<L->length;k++)
-//            L->data[k-1] = L->data[k];
-//    }
-//    L->length--;
-//    return OK;
-//}
-
 Status ListDelete(SqList* L,int i,ElemType* e){
     int k;
     // 确保顺序表结构存在
@@ -155,4 +138,46 @@ Status ListTraverse(SqList L, void(Visit)(ElemType) ){
         Visit(L.data[i]);
     }
     printf("\n");
+}
+/*
+ * 前驱
+ *
+ * 获取元素cur_e的前驱，
+ * 如果存在，将其存储到pre_e中，返回OK，
+ * 如果不存在，则返回ERROR。
+ */
+Status PriorElem(SqList L,ElemType cur_e,ElemType* pre_e){
+    int i;
+
+    if(L.data == NULL || L.length<2)
+        return ERROR;
+
+    i = 0;
+
+    while (i < L.length && L.data[i] != cur_e)
+        ++i;
+
+    if(i == 0 || i>=L.length)
+        return ERROR;
+
+    *pre_e = L.data[i-1];
+
+    return OK;
+}
+
+Status NextElem(SqList L,ElemType cur_e,ElemType* next_e){
+    int i;
+
+    if(L.data == NULL || L.length<2)
+        return ERROR;
+
+    i = 0;
+
+    while (i < L.length-1 && L.data[i] != cur_e)
+        ++i;
+    // 如果cur_e是最后1个元素(没有前驱)，或者没找到元素cur_e，返回ERROR
+    if( i >= L.length-1 )
+        return ERROR;
+    *next_e = L.data[i+1];
+    return OK;
 }
