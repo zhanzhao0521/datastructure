@@ -48,7 +48,7 @@ Status DestroyList(LinkList* L){
 
     p = *L;
 
-    while (p){
+    while (p != NULL){
         p = (*L)->next;
         free(*L);
         (*L) = p;
@@ -107,7 +107,7 @@ Status ListLength(LinkList L){
 
     p = L->next;
 
-    while (p){
+    while (p != NULL){
         i++;
         p = p->next;
     }
@@ -141,15 +141,94 @@ Status GetElem(LinkList L,int i,ElemType *e)
         ++j;
     }
     // 如果遍历到头了，或者i的值不合规(比如i<=0)，说明没找到合乎目标的结点
-    if (!p || j>i)
+    if (p == NULL || j > i)
         return ERROR;
     *e = p->data;
     return OK;
 }
 
+/*
+ * 查找
+ * 返回链表中首个与e相等的元素位序
+ * 如果不存在这样的元素，则返回0
+ */
+int LocateElem(LinkList L,ElemType e){
+    int i;
+    LinkList p;
+
+    if(L == NULL || L->next == NULL)
+       return ERROR;
+
+    i = 1;
+    p = L->next;
+
+    while (p && p->data == e){
+      i++;
+      p = p->next;
+    }
+
+    if(p != NULL)
+        return i;
+    else
+        return 0;
+}
+
+/*
+ * 前驱
+ *
+ * 获取元素cur_e的前驱，
+ * 如果存在，将其存储到pre_e中，返回OK，
+ * 如果不存在，则返回ERROR。
+ */
+Status PriorElem(LinkList L,ElemType cur_e,ElemType* pre_e){
+    LinkList pre,next;
+    if(L == NULL || L->next == NULL) return ERROR;
+
+    pre = L->next;
+
+    //第一个元素没有前驱
+    if(pre->data == cur_e) return ERROR;
+
+    next = pre->next;
+
+    while (next != NULL && next->data != cur_e){
+        pre = next;
+        next = next->next;
+    }
+    if(next == NULL) return ERROR;
+
+    *pre_e = pre->data;
+
+    return OK;
+}
+/*
+ * 后继
+ *
+ * 获取元素cur_e的后继，
+ * 如果存在，将其存储到next_e中，返回OK，
+ * 如果不存在，则返回ERROR。
+ */
+Status NextElem(LinkList L,ElemType cur_e,ElemType* next_e){
+    LinkList pre;
+
+    // 确保链表存在且不为空表
+    if(L == NULL || L->next == NULL) {
+        return ERROR;
+    }
+    pre = L->next;
+
+    while (pre->next != NULL && pre->data != cur_e){
+        pre = pre->next;
+    }
+
+    // 如果没找到cur_e，或者找到了，但它没有后继，均返回ERROR
+    if(pre->next == NULL) return ERROR;
 
 
+    *next_e = pre->next->data;
 
+    return OK;
+}
 
 
 /*
@@ -170,12 +249,117 @@ Status ListInsert(LinkList L,int i,ElemType e)
 
     p = L;
     j = 1;
-    while (p && j<i)
+    while (p !=NULL && j<i)
     {
         p = p->next;
         ++j;
     }
 
+    if(p == NULL || j>j) return ERROR;
 
+    s = (LinkList)malloc(sizeof(LNode));
+
+    if(s == NULL) exit(OVERFLOW);
+
+    s->data = e;
+    s->next = p->next;
+    p->next = s;
+
+    return OK;
+
+}
+/*
+ * ████████ 算法2.10 ████████
+ *
+ * 删除
+ *
+ * 删除链表第i个位置上的元素，并将被删除元素存储到e中。
+ * 删除成功则返回OK，否则返回ERROR。
+ *
+ *【备注】
+ * 教材中i的含义是元素位置，从1开始计数
+ */
+Status ListDelete(LinkList L,int i,ElemType* e){
+    LinkList p,q;
+    int j;
+
+    if(L == NULL || L->next == NULL) return ERROR;
+
+    p = L;
+    j = 0;
+    // 寻找第i-1个结点，且保证该结点的后继不为NULL
+    while (p->next != NULL && j < i-1){
+        p = p->next;
+        ++j;
+    }
+    // 如果遍历到头了，或者i的值不合规(比如i<=0)，说明没找到合乎目标的结点
+    if(p->next == NULL || j > i - 1 ) return ERROR;
+
+    //删除第i个结点
+    q = p->next;
+    p->next = q->next;
+    *e = q->data;
+    free(q);
+
+    return OK;
+
+}
+
+//遍历
+void ListTraverse(LinkList L,void(Visit)(ElemType)){
+    LNode* p;
+
+    if(L == NULL || L->next == NULL) return;
+
+    p = L->next;
+
+    while (p != NULL){
+        Visit(p->data);
+        p = p->next;
+    }
+    printf("\n");
+}
+
+/*
+ * 头插法创建结点
+ */
+Status CreateList_Head(LinkList* L, int n){
+    int i;
+    LinkList p;
+    //建立头节点
+    *L = (LinkList) malloc(sizeof(LNode));
+    (*L)->next = NULL;
+    printf("请输入%d个降序元素：",n);
+    for (i = 1; i <= n; ++i) {
+        //生成新节点
+        p = (LinkList) malloc(sizeof(LNode));
+        scanf("%d",&(p->data));
+        p->next = (*L)->next;
+        (*L)->next = p;
+    }
+    return OK;
+}
+/*
+ * 尾插法创建链表
+ */
+Status CreateList_Tail(LinkList* L,int n){
+    int i;
+    LinkList p,q;
+
+    *L = (LinkList) malloc(sizeof(LNode));
+    (*L)->next = NULL;
+
+    q = *L;
+
+    printf("请输入%d个升序元素：", n);
+
+    for (i = 1; i <= n ; ++i) {
+        p = (LinkList) malloc(sizeof(LNode));
+        scanf("%d",&(p->data));
+        q->next = p;
+        q = q->next;
+    }
+    q->next = NULL;
+    return OK;
 
 }
