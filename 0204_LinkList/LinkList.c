@@ -167,7 +167,7 @@ int LocateElem(LinkList L,ElemType e){
     i = 1;
     p = L->next;
 
-    while (p && p->data == e){
+    while (p && !(p->data == e)){
       i++;
       p = p->next;
     }
