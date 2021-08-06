@@ -19,6 +19,9 @@ typedef struct DuLNode{
     struct DuLNode* prior;//前驱
     struct DuLNode* next;//后继
 } DuLNode,*DuLinkList;
+
+DuLinkList GetElemP(DuLinkList pNode, int i);
+
 /*
  * 初始化
  *
@@ -193,7 +196,7 @@ Status PriorElem(DuLinkList L,ElemType cur_e,ElemType* pre_e){
 
     if(p == L) return ERROR;
 
-    *pre_e = p->next->data;
+    *pre_e = p->prior->data;
 
     return OK;
 }
@@ -239,7 +242,7 @@ Status ListInsert(DuLinkList L,int i,ElemType e ){
 
     if(L == NULL) return ERROR;
 
-    if((p = GetElem(L,i)) == NULL) return ERROR;
+    if((p = GetElemP(L,i)) == NULL) return ERROR;
 
     s = (DuLinkList) malloc((sizeof(DuLNode)));
 
@@ -255,11 +258,11 @@ Status ListInsert(DuLinkList L,int i,ElemType e ){
     return  OK;
 
 }
-
 /*
  * 获取循环链表L上第i个元素的引用
  */
-DuLinkList GetEleP(DuLinkList L,int i){
+
+DuLinkList GetElemP(DuLinkList L, int i) {
     DuLinkList  p;
     int count;
 
@@ -282,3 +285,50 @@ DuLinkList GetEleP(DuLinkList L,int i){
 
     return L;
 }
+
+
+/*
+ * ████████ 算法2.19 ████████
+ *
+ * 删除
+ *
+ * 删除双向循环链表第i个位置上的元素，并将被删除元素存储到e中。
+ * 删除成功则返回OK，否则返回ERROR。
+ *
+ *【备注】
+ * 教材中i的含义是元素位置，从1开始计数
+ */
+Status ListDelete(DuLinkList L, int i,ElemType* e){
+    DuLinkList p;
+
+    if(L == NULL || L->next == L || L->prior == L) return ERROR;
+
+    if((p = GetElemP(L,i)) == NULL) return ERROR;
+    // 如果p==L，说明待删除元素是第len+1个元素，不合规
+    if( p == L) return ERROR;
+
+    *e = p->data;
+
+    p->prior->next = p->next;
+    p->next->prior = p->prior;
+
+    free(p);
+    return OK;
+}
+
+
+void ListTraverse(DuLinkList L,void(Visit)(ElemType)){
+    DuLinkList p;
+
+    if(L == NULL || L->next == L || L->prior == L) return;
+
+    p = L->next;
+
+    while (p != L){
+        Visit(p->data);
+        p = p->next;
+    }
+    printf("\n");
+}
+
+
