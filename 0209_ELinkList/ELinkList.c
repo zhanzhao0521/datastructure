@@ -1,8 +1,13 @@
 //
 // Created by zhanzhao on 2021/8/6.
 //
-
+/*=======================
+ * 扩展的单链表（线性链表）
+ *
+ * 包含算法: 2.20
+ ========================*/
 #include "../Status.h"
+#include "limits.h"
 
 /*
  * ████ 注意 ████
@@ -66,7 +71,7 @@ Status InitList(ELinkList* L){
 
     p = (Link) malloc(sizeof(LNode));
 
-    if(P == NULL) exit(OVERFLOW);
+    if(p == NULL) exit(OVERFLOW);
 
     p->next = NULL;
 
@@ -122,7 +127,7 @@ int ListLength(ELinkList L){
 Position LocateElem(ELinkList L,ElemType e){
     Position p;
 
-    if(L.len <= 0) return NUll;
+    if(L.len <= 0) return NULL;
 
     p = L.head->next;
 
@@ -385,4 +390,99 @@ Status ListDelete(ELinkList* L,int i,ElemType* e){
 
     return OK;
 
+}
+
+void ListTraverse(ELinkList L,void(Visit)(ElemType)){
+    Link p;
+
+    if(L.len <= 0 ) return;
+
+    p = L.head->next;
+
+    while (p != NULL){
+        Visit(p->data);
+        p = p->next;
+    }
+    printf("\n");
+}
+
+/*━━━━━━━━━━━━━━━━━━━━━━ 链表扩展操作 ━━━━━━━━━━━━━━━━━━━━━━*/
+
+/*
+ * 取值
+ *
+ * 获取结点p的元素值。
+ */
+ElemType GetCurElem(Link p){
+    if(p == NULL) return INT_MIN;
+
+    return p->data;
+}
+
+/*
+ * 设值
+ *
+ * 为结点p设置元素值。
+ */
+Status SetCurElem(Link p,ElemType e){
+    if(p == NULL) return ERROR;
+
+    p->data = e;
+
+    return OK;
+}
+
+/*
+ * 头结点
+ *
+ * 获取头结点引用。
+ */
+Position GetHead(ELinkList L){
+    return L.head;
+}
+/*
+ * 尾结点
+ *
+ * 获取尾结点引用。
+ */
+Position GetLast(ELinkList L){
+    return L.tail;
+}
+
+
+/*
+ * 前驱
+ *
+ * 获取结点p的前驱，如果不存在，则返回NULL。
+ */
+Position PriorPos(ELinkList L,Link p){
+    Link pre;
+
+    if(L.head == NULL) return NULL;
+
+
+    if(p == NULL) return NULL;
+
+    pre = L.head;
+
+    if(pre->next == p) return NULL;
+    // 第一个结点无前驱
+    while (pre != NULL && pre->next != p){
+        pre = pre->next;
+    }
+
+    return pre;
+
+}
+
+/*
+ * 后继
+ *
+ * 获取结点p的后继，如果不存在，则返NULL。
+ */
+Position NextPos(ELinkList L,Link p){
+
+    if(L.head == NULL || p ==  NULL) return NULL;
+
+    return p->next;
 }
