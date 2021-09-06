@@ -1,21 +1,7 @@
-# cmake_minimum_required(VERSION <specify CMake version here>)
-project(datastructure)
+cmake_minimum_required(VERSION 3.14)
+project(CLion C)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD 90)
 
-
-# 遍历项目根目录下所有的 .cpp 文件
-file (GLOB_RECURSE files *.cpp)
-foreach (file ${files})
-    string(REGEX REPLACE ".+/(.+)\\..*" "\\1" exe ${file})
-    add_executable (${exe} ${file})
-    message (\ \ \ \ --\ src/${exe}.cpp\ will\ be\ compiled\ to\ bin/${exe})
-endforeach ()
-
-# 遍历项目根目录下所有的 .cpp 文件
-file (GLOB_RECURSE files *.c)
-foreach (file ${files})
-    string(REGEX REPLACE ".+/(.+)\\..*" "\\1" exe ${file})
-    add_executable (${exe} ${file})
-    message (\ \ \ \ --\ src/${exe}.c\ will\ be\ compiled\ to\ bin/${exe})
-endforeach ()
+add_subdirectory(Status)
+add_subdirectory(CourseBook)
