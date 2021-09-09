@@ -36,3 +36,5 @@ add_subdirectory(0507_MPList)
 
 add_subdirectory(0601_SqBiTree)
 add_subdirectory(0602_BiTree)
+add_subdirectory(0603_BiTriTree)
+add_subdirectory(0604_BiThrTree)
